@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>课程列表</title>
+	<link rel="stylesheet" type="text/css" th:href="@{css/newstyle.css}">
+</head>
+<body>
+<!-- start header -->
+<div th:replace="frontdesk/common :: categirymenu"></div>
+
+
+<div class="danpin center">
+	<div th:if="${courses}">
+		<div class="biaoti center">
+		<ul style="float: left;height: 30px;margin: 30px 0;font-size: 15px;font-weight: normal;">
+			<li style="float: left;background:rgba(250,120,122,0.48);width: 100px;height: 30px;line-height: 30px">分类</li>
+			<li th:each="scategory:${session.scategories}" style="float: left;margin: 0 10px;height: 30px;line-height: 30px">
+				<a th:href="@{/getAllCourseByScategoryId(id=${scategory.id})}" th:text="${scategory.name}"></a>
+			</li>
+		</ul>
+	</div>
+		<div class="main center mb20"  >
+		<div th:each="course:${courses}" class="mingxing fl mb20">
+			<div class="sub_mingxing"><a th:href="@{/toCourseDetail(id=${course.id})}"><img th:src="${course.imgUrl}" alt=""></a></div>
+			<div class="pinpai"><a th:href="@{/toCourseDetail(id=${course.id})}" th:text="${course.name}"></a></div>
+			<div class="youhui">开班时间:<span th:text="${#dates.format(course.startTime,'yyyy-MM-dd')}"></span></div>
+			<div class="jiage">￥<span th:text="${course.price}"></span></div>
+		</div>
+
+		<div class="clear"></div>
+	</div>
+	</div>
+	<div th:if="${courseByTeacherId}">
+
+		<div class="jieshao mt20 w" style="height: 300px;">
+			<div class="left fl" style="width: 235px;height: 245px;overflow: hidden;"><img class="img1" th:src="${teacher.imgUrl}" style="width: 100%;display: block;" ></div>
+			<div class="right fr" style="width: 950px;height: 245px;">
+				<div class="h3 ml20 mt20" th:text="${teacher.name}">老王</div>
+				<div class="jianjie mr40 ml20 mt10" >状态：<span class="font-red" th:text="${teacher.stat}"></span></div>
+				<div class="jianjie mr40 ml20 mt10" >简介：<span class="font-red" th:text="${teacher.description}"></span></div>
+			</div>
+		</div>
+
+
+		<div class="main center mb20"  >
+			<div th:each="course:${courseByTeacherId}" class="mingxing fl mb20">
+				<div class="sub_mingxing"><a th:href="@{/toCourseDetail(id=${course.id})}"><img th:src="${course.imgUrl}" alt=""></a></div>
+				<div class="pinpai"><a th:href="@{/toCourseDetail(id=${course.id})}" th:text="${course.name}"></a></div>
+				<div class="youhui">开班时间:<span th:text="${#dates.format(course.startTime,'yyyy-MM-dd')}"></span></div>
+				<div class="jiage">￥<span th:text="${course.price}"></span></div>
+			</div>
+
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+
+<footer class="mt20 center">
+	<div class="mt20"></div>
+	<div>©zong.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014]0059-0009号</div>
+	<div>违法和不良信息举报电话：185-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
+
+</footer>
+
+
+</body>
+</html>

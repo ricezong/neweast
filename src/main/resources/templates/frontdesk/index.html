@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>新东方</title>
+		<link rel="stylesheet" type="text/css" th:href="@{css/newstyle.css}">
+		<script type="text/javascript" th:src="@{js/jquery.js}"></script>
+	</head>
+	<body>
+
+		<div th:replace="frontdesk/common :: categirymenu"></div>
+		<!-- start banner_y -->
+		<div class="banner_y center">
+			<div class="nav">				
+				<ul>
+					<li class="cnav">
+						<a href="">课程导航</a>
+					</li>
+					<li th:each="fcategory:${session.category}">
+						<a th:href="@{/getAllCourseByFcategoryId(id=${fcategory.id})}" th:text="${fcategory.name}">小学辅导</a>
+						<div class="pop">
+							<div class="left fl">
+								<div th:each="scategory:${fcategory.getScategories()}">
+									<div class="xuangou_left fl">
+										<a th:href="@{/getAllCourseByScategoryId(id=${scategory.id})}">
+											<span class="fl" th:text="${scategory.name}">一年级</span>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<a href="">在职人士</a>
+					</li>
+					<li>
+						<a href="">出国留学</a>
+					</li>
+					<li>
+						<a href="">夏冬令营</a>
+					</li>
+				</ul>
+			</div>
+			<div class="bannerimg"></div>
+		</div>
+		<!-- start danpin -->
+		<div class="danpin center">
+			
+			<div class="biaoti center">精品课程</div>
+			<div class="main center">
+				<div class="mingxing fl" th:each="list:${page.records}">
+					<div class="sub_mingxing"><a th:href="@{/toCourseDetail(id=${list.id})}"><img th:src="${list.imgUrl}"></a></div>
+					<div class="pinpai"><a th:href="@{/toCourseDetail(id=${list.id})}" th:text="${list.name}"></a></div>
+					<div class="youhui" >已报名:<span th:text="${list.signUp}"></span>人</div>
+					<div class="jiage">￥<span th:text="${list.price}"></span></div>
+				</div>
+				<div class="span6">
+					<ul>
+						<li th:class="${page.hasPrevious()?'prev':'prev disabled'}"><a
+								th:href="@{/index(pn=${page.hasPrevious()?(page.current)-1:page.current})}">&laquo;</a>
+						</li>
+						<li th:class="${page.hasNext()?'next':'next disabled'}"><a
+								th:href="@{/index(pn=${page.hasNext()?(page.current)+1:page.current})}">&raquo;</a>
+						</li>
+					</ul>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<div class="peijian w">
+			<div class="biaoti center">师资力量</div>
+			<div class="main center">
+				<div class="content">
+					<div class="remen fl" th:each="teacher:${teachers}">
+						<div class="tu"><a th:href="@{/toTeacherDetail(id=${teacher.id})}"><img th:src="${teacher.imgUrl}"></a></div>
+						<div class="miaoshu"><a th:href="@{/toTeacherDetail(id=${teacher.id})}" th:text="${teacher.description}">介绍</a></div>
+						<div class="jiage" th:text="${teacher.name}">名称</div>
+						<div class="pingjia" th:text="${teacher.stat}">状态</div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</div>
+		</div>
+		<footer class="mt20 center">			
+			<div class="mt20"></div>
+			<div>©zong.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014]0059-0009号</div>
+			<div>违法和不良信息举报电话：185-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
+		</footer>
+	</body>
+</html>

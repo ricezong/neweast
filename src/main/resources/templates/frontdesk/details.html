@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>详情</title>
+    <link rel="stylesheet" type="text/css" th:href="@{css/newstyle.css}">
+    <script type="text/javascript" th:src="@{/js/jquery.js}"></script>
+    <style>
+        .tabCon {
+            width: 1226px;
+            margin: 0 auto 20px auto;
+        }
+
+        .tabCon .tabTitleCon {
+            position: relative;
+            height: 52px;
+            background: rgb(248, 248, 248);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .tabCon .tabTitleCon .tabTitleConLeft {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .tabCon .tabTitleCon .tabTitleConLeft .tabTitleConItem {
+            padding: 0 40px;
+            font-size: 20px;
+            line-height: 50px;
+            cursor: pointer;
+            color: #000000;
+        }
+
+        .classTeacherList {
+            width: 1226px;
+            height: 160px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .classTeacherList .swiper-container {
+            margin: 0 40px;
+        }
+
+        .classTeacherList .swiper-container .swiper-button-prev {
+            opacity: 1;
+            top: 0;
+            left: 0;
+            margin-top: 0;
+            width: 90px;
+            height: 160px;
+            background: #fafafa;
+        }
+
+        .classTeacherList .swiper-container .swiper-button-next {
+            top: 0;
+            right: 0;
+            margin-top: 0;
+            width: 90px;
+            height: 160px;
+            background: #fafafa;
+            opacity: 1;
+        }
+
+        .swiper-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            display: flex;
+            transition-property: transform;
+            box-sizing: content-box;
+        }
+
+        .swiper-slide {
+            flex-shrink: 0;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition-property: transform;
+        }
+
+        .classTeacherList .swiper-container .content {
+            height: 160px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .classTeacherList .swiper-container .content .areaImg {
+            width: 80px;
+            height: 80px;
+            background: #e1e1e1;
+            border-radius: 50px;
+        }
+
+        .classTeacherList .swiper-container .content .teacherInfoCon {
+            margin-left: 20px;
+        }
+
+        .classTeacherList .swiper-container .content .teacherInfoCon .name {
+            font-size: 14px;
+            color: #333;
+            line-height: 20px;
+        }
+
+        .classTeacherList .swiper-container .content .teacherInfoCon .subject {
+            margin: 5px 10px;
+            font-size: 16px;
+            font-weight: 400;
+            color: #333;
+            line-height: 22px;
+            float: left;
+        }
+
+        .courseIntro {
+            padding-left: 40px;
+        }
+
+        .courseIntro .infoItem .label {
+            width: 90px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            line-height: 26px;
+            padding-right: 10px;
+        }
+
+        .itemCon .courseIntro .infoItem .value {
+            width: 1070px;
+            font-size: 14px;
+            font-weight: 400;
+            color: #333;
+            line-height: 26px;
+        }
+
+        .courseIntro .infoItem:first-child {
+            margin-top: 37px;
+        }
+
+        .courseIntro .infoItem {
+            margin-top: 14px;
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="frontdesk/common :: categirymenu"></div>
+
+<!-- xiangqing -->
+<div class="xiangqing">
+    <div class="neirong w">
+        <div class="xiaomi6 fl" th:text="${course.name}"></div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+<div class="jieshao mt20 w">
+    <div class="left fl"><img class="img1" th:src="${course.imgUrl}"></div>
+    <div class="right fr">
+        <div class="h3 ml20 mt20" th:text="${course.name}">小米6</div>
+        <div class="jianjie mr40 ml20 mt10">计划招收：<span class="font-red" th:text="${course.maxSignUp}"></span>人</div>
+        <div class="jianjie mr40 ml20 mt10">已报名：<span class="font-red" th:text="${course.signUp}"></span>人</div>
+        <div class="jianjie mr40 ml20 mt10">状态：<span class="font-red" th:text="${course.signUp}>=20?'已开班':'未开班'"></span></div>
+
+        <div class="jiage ml20 mt10 ">￥<span id="price" th:text="${course.price}"></span></div>
+        <div class="ft20 ml20 mt20">上课时间:<span th:text="${#dates.format(course.startTime,'yyyy-MM-dd')}"></span></div>
+        <div class="ft20 ml20 mt20">报名截止:<span th:text="${#dates.format(course.endTime,'yyyy-MM-dd')}"></span></div>
+
+
+        <div class="xiadan">
+            <input id="jrgwc" class="jrgwc" th:onclick="addCart([[${course.id}]])" value="加入购物车" th:disabled="${course.signUp==course.maxSignUp?'true':'false'}"></input>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+<script>
+    if($("#jrgwc").prop("disabled")==true){//如果按钮是不可用的
+        $("#jrgwc").css("background-color","#bbbbbb","po")
+    }
+    function addCart(courseId) {
+        var price=$("#price").text();
+        $.ajax({
+            url: "/addCart",
+            data: {'courseId': courseId,'price':price},
+            method: "post",
+            success: function (data) {
+                if (data == 'success') {
+                    window.location.href = "/cartList";
+                }
+            }
+        });
+    }
+</script>
+<!--底部授课老师和班级详情信息	-->
+<div class="tabCon">
+    <!--授课老师	-->
+    <div class="tabTitleCon">
+        <div class="tabTitleConLeft">
+            <div class="tabTitleConItem ">授课老师</div>
+        </div>
+    </div>
+    <!--	授课老师图片栏(老师详情页)	-->
+    <div class="classTeacherList">
+        <div class="swiper-container swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events">
+
+
+            <div class="swiper-wrapper" style="transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;">
+                <div class="swiper-slide swiper-slide-active">
+                    <div class="content">
+                        <div>
+                            <div class="name" th:text="${teacher.name}" style="text-align: center;margin:10px 0">韩青松
+                            </div>
+                            <a th:href="@{/toTeacherDetail(id=${teacher.id})}"><img th:src="${teacher.imgUrl}"
+                                                                                    class="areaImg swiper-lazy"></a>
+                            <div class="name" th:text="${teacher.stat}" style="text-align: center;color: red;">已开课</div>
+                        </div>
+                        <div class="teacherInfoCon">
+                            <div class="subject" th:each="course:${courseByTeacherId}"><a
+                                    th:href="@{/toCourseDetail(id=${course.id})}"><span th:text="${course.name}"></span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- footer -->
+<footer class="mt20 center">
+
+    <div class="mt20"></div>
+    <div>©zong.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014]0059-0009号</div>
+    <div>违法和不良信息举报电话：185-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
+
+</footer>
+
+</body>
+</html>

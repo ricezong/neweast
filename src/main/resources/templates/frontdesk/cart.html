@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>我的购物车</title>
+    <link rel="stylesheet" type="text/css" th:href="@{css/newstyle.css}">
+    <script type="text/javascript" th:src="@{/js/jquery.js}"></script>
+</head>
+<body>
+<div th:replace="frontdesk/common :: categirymenu"></div>
+
+<div class="gwcxqbj">
+    <div class="gwcxd center">
+        <div class="top2 center">
+            <div class="sub_top fl" style="width: 100px;">
+                <input type="checkbox" value="quanxuan" class="quanxuan"/>
+            </div>
+            <div class="sub_top fl" style="width: 400px;">商品名称</div>
+            <div class="sub_top fl">单价</div>
+            <div class="sub_top fl">数量</div>
+            <div class="sub_top fl">小计</div>
+            <div class="sub_top fr" style="width: 100px;">操作</div>
+            <div class="clear"></div>
+        </div>
+        <div class="content2 center" th:each="cartVo:${cartVos}">
+            <input type="hidden" th:value="${cartVo.courseId}" id="courseId">
+            <input type="hidden" th:value="${cartVo.id}" id="cartVoId">
+            <div class="sub_content fl " style="width: 100px;">
+                <input type="checkbox" value="quanxuan" class="quanxuan"/>
+            </div>
+            <div class="sub_content fl"><a th:href="@{/toCourseDetail(id=${cartVo.courseId})}"><img th:src="${cartVo.imgUrl}" width="80px" height="48px"></a></div>
+            <a th:href="@{/toCourseDetail(id=${cartVo.courseId})}"><div class="sub_content fl " th:text="${cartVo.name}" style="text-align: left">名称</div></a>
+            <div class="sub_content fl " th:text="${cartVo.price}">2499元</div>
+            <div class="sub_content fl">
+                <input class="shuliang"  type="text" th:value="${cartVo.count}" step="1" min="1" style="width: 30px;height: 30px;">
+            </div>
+            <div class="sub_content fl" th:text="${cartVo.count*cartVo.price}">2499元</div>
+            <div class="sub_content fl" style="width: 100px;margin-left: 25px;"><a th:href="@{/delCourse(id=${cartVo.id})}">×</a></div>
+            <div class="clear"></div>
+        </div>
+    </div>
+
+
+
+    <div class="jiesuandan mt20 center">
+        <div class="tishi fl ml20">
+            <ul>
+                <li><a th:href="@{/index}">继续购物</a></li>
+                <li>|</li>
+                <li>共<span th:text="${session.userCartVo.num}">2</span>件商品</li>
+                <div class="clear"></div>
+            </ul>
+        </div>
+        <div class="jiesuan fr">
+            <div class="jiesuanjiage fl">合计（不含运费）：<span id="price" th:text="${session.userCartVo.totalPrice}">2499.00元</span></div>
+            <div class="jsanniu fr"><a class="jsan" th:onclick="toPay([[${session.user.id}]])">去结算</a></div>
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+</div>
+<script>
+    function toPay(userId) {
+        var price=$("#price").text();
+        var courseId=$("#courseId").val();
+        var cartVoId=$("#cartVoId").val();
+        $.ajax({
+            url: "/toPay",
+            data: {'userId': userId,'totalPrice':price,'courseId':courseId,'id':cartVoId},
+            method: "post",
+            success: function (data) {
+                if (data == 'success') {
+                    window.location.href = "/success";
+                } else {
+                    alert("余额不足请充值！");
+                }
+            }
+        });
+    }
+</script>
+
+<!-- footer -->
+<footer class="center">
+
+    <div class="mt20"></div>
+    <div>©zong.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014]0059-0009号</div>
+    <div>违法和不良信息举报电话：185-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
+</footer>
+
+</body>
+</html>

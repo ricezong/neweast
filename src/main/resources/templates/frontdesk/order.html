@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>订单</title>
+		<link rel="stylesheet" type="text/css" th:href="@{css/newstyle.css}">
+
+		<style>
+			tr{
+				border-bottom: 1px solid;
+			}
+			tr:hover{
+				background: whitesmoke;
+			}
+			th,td{
+				padding: 15px 35px;
+			}
+		</style>
+	</head>
+	<body>
+
+	<div th:replace="frontdesk/common :: categirymenu"></div>
+	<!-- self_info -->
+	<div class="grzxbj">
+		<div class="selfinfo center">
+		<div class="lfnav fl">
+			<div class="ddzx">个人中心</div>
+			<div class="subddzx">
+				<ul>
+					<li><a th:href="@{toInfo}">个人信息</a></li>
+					<li><a href="">消息通知</a></li>
+					<li><a href="">优惠券</a></li>
+					<li><a href="">收货地址</a></li>
+				</ul>
+			</div>
+			<div class="ddzx">订单中心</div>
+			<div class="subddzx">
+				<ul>
+					<li><a th:href="@{/orders}"  style="color: red;font-weight:bold;">我的订单</a></li>
+					<li><a href="">意外保</a></li>
+					<li><a href="">团购订单</a></li>
+					<li><a href="">评价晒单</a></li>
+				</ul>
+			</div>
+
+		</div>
+		<div class="rtcont fr">
+
+			<table style="margin:0 auto;text-align: center;margin: 0 auto;text-align: center;border-collapse: collapse;margin-top: 50px;">
+				<tr>
+					<th>#</th>
+					<th>订单编号</th>
+					<th>课程名</th>
+					<th>学生</th>
+					<th>价格</th>
+					<th>创建时间</th>
+				</tr>
+				<tr th:each="order,stat:${orderVos}" >
+					<td th:text="${stat.count}"></td>
+					<td th:text="${order.id}"></td>
+					<td><a style="color: rgba(255,0,0,0.56)" th:href="@{/toCourseDetail(id=${order.courseId})}" th:text="${order.name}"></a></td>
+					<td th:text="${order.stuName}"></td>
+					<td th:text="${order.price}"></td>
+					<td th:text="${#dates.format(order.createTime,'yyyy-MM-dd')}"></td>
+				</tr>
+			</table>
+		</div>
+		<div class="clear"></div>
+		</div>
+	</div>
+	<!-- self_info -->
+		
+		<footer class="mt20 center">
+		   <div class="mt20"></div>
+		   <div>neweast.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014]0059-0009号</div> 
+		   <div>违法和不良信息举报电话：123-456-789，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
+		  </footer>
+	</body>
+</html>
